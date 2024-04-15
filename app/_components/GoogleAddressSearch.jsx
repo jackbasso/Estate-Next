@@ -13,12 +13,12 @@ function GoogleAddressSearch({ selectedAddress, setCoordinates }) {
           isClearable: true,
           className: "w-full",
           onChange: (place) => {
-            //console.log(place);
+            console.log(place);
             selectedAddress(place);
             geocodeByAddress(place.label)
               .then((result) => getLatLng(result[0]))
               .then(({ lat, lng }) => {
-                //console.log(lat, lng);
+                console.log(lat, lng);
                 setCoordinates({ lat, lng });
               });
           },

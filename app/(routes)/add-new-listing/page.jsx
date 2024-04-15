@@ -4,14 +4,18 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/utils/supabase/client";
 import React, { useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
 function AddNewListing() {
   const [selectedAddress, setSelectedAddress] = useState();
   const [coordinates, setCoordinates] = useState();
   const { user } = useUser();
+  const [loader, setLoader] = useState(false);
 
   const nextHandler = async () => {
     //console.log(selectedAddress, coordinates);
+    setLoader(true);
     const { data, error } = await supabase
       .from("listing")
       .insert([
@@ -20,10 +24,14 @@ function AddNewListing() {
       .select();
 
     if (data) {
+      setLoader(false);
       console.log("Added succesfully, ", data);
+      toast("New Address added for listing");
     }
     if (error) {
+      setLoader;
       console.log("Error");
+      toast("Server side error");
     }
   };
 
@@ -38,8 +46,8 @@ function AddNewListing() {
             selectedAddress={(value) => setSelectedAddress(value)}
             setCoordinates={(value) => setCoordinates(value)}
           />
-          <Button disabled={!selectedAddress || !coordinates} onClick={nextHandler}>
-            Next
+          <Button disabled={!selectedAddress || !coordinates || loader} onClick={nextHandler}>
+            {loader ? <Loader className="animate-spin" /> : "Next"}
           </Button>
         </div>
       </div>
