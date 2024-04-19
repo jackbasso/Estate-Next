@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
+import FileUpload from "./_components/FileUpload";
 
 function EditListing({ params }) {
   //const params = usePathname();
@@ -46,6 +47,19 @@ function EditListing({ params }) {
       console.log(data);
       toast("Listing updated and Published");
     }
+    for (const image of images) {
+      const file = image;
+      const fileName = Date.now().toString();
+      const fileExt = fileName.split(".").pop();
+      const { data, error } = await supabase.storage.from(listingImages).upload(`${fileName}`, file, {
+        contentType: `image/${fileExt}`,
+        upsert: false,
+      });
+
+      if (error) {
+        toast("Error while uploading images");
+      }
+    }
   };
 
   return (
@@ -55,6 +69,8 @@ function EditListing({ params }) {
         initialValues={{
           type: "",
           propertyType: "",
+          profileImage: user?.imageUrl,
+          fullName: user?.fullName,
         }}
         onSubmit={(values) => {
           console.log(values);
@@ -198,6 +214,10 @@ function EditListing({ params }) {
                       onChange={handleChange}
                     />
                   </div>
+                </div>
+                <div>
+                  <h2 className="font-lg text-gray-500 my-2">Upload Property Images</h2>
+                  <FileUpload setImages={(value) => setImages(value)} />
                 </div>
                 <div className="flex gap-4 justify-end mt-4">
                   <Button variant="outline" className="text-primary border-primary">
