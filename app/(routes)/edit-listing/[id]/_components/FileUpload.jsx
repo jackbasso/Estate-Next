@@ -4,7 +4,6 @@ import Image from "next/image";
 
 function FileUpload({ setImages }) {
   const [imagePreview, setImagePreview] = useState([]);
-  const [images, setImages] = useState([]);
 
   const handleFileUpload = (event) => {
     const files = event.target.files;

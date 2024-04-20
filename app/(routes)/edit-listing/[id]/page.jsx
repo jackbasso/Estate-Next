@@ -18,6 +18,7 @@ function EditListing({ params }) {
   const { user } = useUser();
   const router = useRouter();
   const [listing, setListing] = useState([]);
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     //console.log(params.split("/")[2]);
@@ -41,23 +42,27 @@ function EditListing({ params }) {
   };
 
   const onSubmitHandler = async (formValue) => {
-    const { data, error } = await supabase.from("listing").update(formValue).eq("id", params.id).select();
+    // const { data, error } = await supabase.from("listing").update(formValue).eq("id", params.id).select();
 
-    if (data) {
-      console.log(data);
-      toast("Listing updated and Published");
-    }
+    // if (data) {
+    //   console.log(data);
+    //   toast("Listing updated and Published");
+    // }
     for (const image of images) {
       const file = image;
       const fileName = Date.now().toString();
       const fileExt = fileName.split(".").pop();
-      const { data, error } = await supabase.storage.from(listingImages).upload(`${fileName}`, file, {
+      const { data, error } = await supabase.storage.from("listingImages").upload(`${fileName}`, file, {
         contentType: `image/${fileExt}`,
         upsert: false,
       });
 
       if (error) {
         toast("Error while uploading images");
+      } else {
+        console.log("data", data);
+        const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL + fileName;
+        console.log(imageUrl);
       }
     }
   };
