@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-function FileUpload({ setImages }) {
+function FileUpload({ setImages, imageList }) {
   const [imagePreview, setImagePreview] = useState([]);
 
   const handleFileUpload = (event) => {
@@ -57,6 +57,15 @@ function FileUpload({ setImages }) {
           </div>
         ))}
       </div>
+      {imageList && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-10 gap-3 mt-3">
+          {imageList.map((image, index) => (
+            <div key={index}>
+              <Image src={image?.url} width={100} height={100} className="rounded-lg" alt={index} />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
