@@ -1,18 +1,50 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
 import { MapPin, BedDouble, Bath, Ruler, Search } from "lucide-react";
 import GoogleAddressSearch from "./GoogleAddressSearch";
 import { Button } from "@/components/ui/button";
+import FilterSection from "./FilterSection";
 
-function Listing({ listing, handleSearchClick, searchedAddress }) {
+function Listing({
+  listing,
+  handleSearchClick,
+  searchedAddress,
+  setBathCount,
+  setBedCount,
+  setParkingCount,
+  setHomeType,
+  setCoordinates,
+}) {
+  const [address, setAddress] = useState();
   return (
     <div>
-      <div className="flex gap-6">
-        <GoogleAddressSearch selectedAddress={(v) => searchedAddress(v)} setCoordinates={(v) => (console.log = v)} />
+      <div className="p-3 flex gap-6">
+        <GoogleAddressSearch
+          selectedAddress={(v) => {
+            searchedAddress(v);
+            setAddress(v);
+          }}
+          setCoordinates={setCoordinates}
+        />
         <Button className="flex gap-2" onClick={handleSearchClick}>
           <Search className="h-4 w-4" /> Search
         </Button>
       </div>
+      <FilterSection
+        setBedCount={setBedCount}
+        setBathCount={setBathCount}
+        setParkingCount={setParkingCount}
+        setHomeType={setHomeType}
+      />
+      {address && (
+        <div className="px-3 my-5">
+          <h2 className="text-xl">
+            Found <span className="font-bold">{listing?.length}</span> Result in{" "}
+            <span className="text-primary font-bold">{address?.label}</span>
+          </h2>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {listing.length > 0
@@ -20,7 +52,7 @@ function Listing({ listing, handleSearchClick, searchedAddress }) {
               <div key="index" className="p-3 hover:border hover:border-primary rounded-lg cursor-pointer">
                 <Image
                   src={item.listingImages[0].url}
-                  width={300}
+                  width={800}
                   height={150}
                   className={"rounded-lg object-cover h-[170px]"}
                 />
