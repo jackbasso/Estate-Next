@@ -42,7 +42,7 @@ function Header() {
           </Button>
         </Link>
         {isSignedIn ? (
-          <UserButton />
+          <Image src={user?.imageUrl} width={35} height={35} alt="user profile" className="" />
         ) : (
           <Link href={"/sign-in"}>
             <Button variant="outline">Login</Button>
