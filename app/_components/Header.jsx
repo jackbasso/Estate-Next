@@ -6,7 +6,15 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 //CLERK
-import { useUser, UserButton } from "@clerk/nextjs";
+import { useUser, UserButton, SignOutButton } from "@clerk/nextjs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function Header() {
   const path = usePathname();
@@ -42,7 +50,22 @@ function Header() {
           </Button>
         </Link>
         {isSignedIn ? (
-          <Image src={user?.imageUrl} width={35} height={35} alt="user profile" className="" />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Image src={user?.imageUrl} width={35} height={35} alt="user profile" className="rounded-full" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href={"/user"}>Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>My Listing</DropdownMenuItem>
+              <DropdownMenuItem>
+                <SignOutButton>Logout</SignOutButton>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <Link href={"/sign-in"}>
             <Button variant="outline">Login</Button>
